@@ -3,7 +3,6 @@
 ### LIBRARIES ##########################################################################################################
 
 library(tidyverse)
-library(funModeling)
 
 ### LOADING DATA #######################################################################################################
 
@@ -20,10 +19,14 @@ anyNA(raw_data)       # Checking if any NA exists in data: FALSE
 # helper vectors
 
 Targets <- paste0('V', 14:32)
-users <- c('CL0', 'CL1')
-non_users <- c('CL2', 'CL3', 'CL4', 'CL5', 'CL6')
+non_users <- c('CL0', 'CL1')
+users <- c('CL2', 'CL3', 'CL4', 'CL5', 'CL6')
 
 
+
+# Some variables are categorical, so they must be recoded to factors
+# Categories in Drug Usage variable are merged into two categories: user, non-user
+# Variables are ranamed for better interpratation of further models
 
 preprocessed_data <- raw_data %>% 
   mutate(Age = factor(V2, sort(unique(V2)),

@@ -27,3 +27,13 @@ pred_m1_aic_tst <- predict(m1_aic, newdata = tmp[-ix_tran,], type = 'response')
 Metrics::auc(tmp[ix_tran, 'V17'], pred_m1_aic_trn)
 Metrics::auc(tmp[-ix_tran, 'V17'], pred_m1_aic_tst)
 
+
+library(DataExplorer)
+imb <- inspect_imb(preprocessed_data)
+unnest(imb)
+
+
+
+categ_plot <- plot_bar(preprocessed_data[, cat_vars],)
+
+categ_analysis(preprocessed_data[,c(cat_vars, 'Benzos')], target = 'Benzos')
