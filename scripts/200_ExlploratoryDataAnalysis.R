@@ -5,6 +5,7 @@
 library(tidyverse)
 library(funModeling)
 library(inspectdf)
+library(corrplot)
 
 ### LOADING DATA #######################################################################################################
 
@@ -119,6 +120,42 @@ ggplot(categ_fractions, aes(x = fraction, y = level, fill = target)) +
 
 ### Exploration od Continuus Variables ###############################################################################
 
+numeric_vars <- preprocessed_data %>% 
+  select_if(is.numeric) %>%
+  colnames()
+
+numerical_longer <- preprocessed_data %>% 
+  pivot_longer(cols = numeric_vars,
+               names_to = 'variable',
+               values_to = 'score') %>% 
+  select(variable, score, Benzos)
+
+ggplot(numerical_longer, aes(score)) +
+  facet_wrap(.~variable) +
+  geom_density() +
+  theme_bw()
+
+
+ggplot(numerical_longer, aes(score, fill = Benzos)) +
+  facet_wrap(~variable) +
+  geom_boxplot(alpha = 0.3) +
+  theme_bw() +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom',
+        axis.text.y = element_blank()) +
+  ggtitle('Boxplots of  ')
+
+
+# Correlations ---------------------------------------------------------------------------------------------------------
+
+corr_matrix <- cor(preprocessed_data[ , numeric_vars])
+
+corrplot(corr_matrix,
+         type = 'lower',
+         method = 'color', 
+         number.cex = 0.8,
+         addCoef.col = 'black',
+         tl.srt = 45)
 
 
 
