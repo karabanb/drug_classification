@@ -37,7 +37,38 @@ tmp <- raw_data %>%
          Ethnicity = factor(V6, sort(unique(V6)),
                             labels = c('Black', 'Asian', 'White', 'Mixed W/B', 'Other', 'Mixed W/A', 'Mixed B/A'))) %>% 
   mutate_at(Targets, fct_collapse, non_user = non_users, user = users) %>%
+  rename(
+         Neuroticism = V7,
+         Extraversion = V8,
+         OpennessToExperience = V9,
+         Agreeableness = V10,
+         Conscientiousness = V11,
+         Impulsiveness = V12,
+         SensationSeeing = V13,
+         Alcohol = V14,
+         Amphet = V15,
+         Amyl = V16,
+         Benzos = V17,
+         Caffeine = V18,
+         Cannabis = V19,
+         Chocloate = V20,
+         Coke = V21,
+         Crack = V22,
+         Extasy = V23,
+         Heroine = V24,
+         Ketamine = V25,
+         LegalHighs = V26,
+         LSD = V27,
+         Meth = V28,
+         Mushrooms = V29,
+         Nicotine = V30,
+         Semeron = V31,
+         VSA = V32
+         ) %>% 
   select(-V1, -V2, -V3, -V4, -V5, -V6)
+
+# warning 'Unknown levels in `f`: CL5, CL6' can be ignored. 
+# The reason is lack of CL5 and CL6 levels in 
 
 
 
