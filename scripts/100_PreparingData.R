@@ -25,7 +25,7 @@ non_users <- c('CL2', 'CL3', 'CL4', 'CL5', 'CL6')
 
 
 
-tmp <- raw_data %>% 
+preprocessed_data <- raw_data %>% 
   mutate(Age = factor(V2, sort(unique(V2)),
                       labels = c('18-24', '25-34', '35-44', '45-54', '55-64', '65 +')),
          Gender = factor(V3, sort(unique(V3)),
@@ -68,7 +68,11 @@ tmp <- raw_data %>%
   select(-V1, -V2, -V3, -V4, -V5, -V6)
 
 # warning 'Unknown levels in `f`: CL5, CL6' can be ignored. 
-# The reason is lack of CL5 and CL6 levels in 
+# The reason is lack of CL5 and CL6 levels in Semeron variable
+
+save(preprocessed_data, file = 'data/100_preprocessed_data.RData')
+
+rm(list = ls())
 
 
 
