@@ -11,12 +11,12 @@ library(corrplot)
 
 load('data/100_preprocessed_data.RData')
 
-
 # helper vectors
 
-drugs <- c('Amphet', 'Amyl', 'Benzos', 'Caffeine', 'Cannabis', 'Chocloate', 'Coke', 'Crack', 'Extasy', 'Heroine',
+drugs <- c('Amphet', 'Amyl', 'Alcohol', 'Benzos', 'Caffeine', 'Cannabis', 'Chocloate', 'Coke', 'Crack', 'Extasy', 'Heroine',
   'Ketamine', 'LegalHighs', 'LSD', 'Meth', 'Mushrooms', 'Nicotine', 'Semeron', 'VSA')
 
+save(drugs, file = 'tmp/200_DrugNames.RData')
 
 ### Exploration od Catagorical Variables ###############################################################################
 
@@ -77,14 +77,14 @@ ggplot(categ_fractions, aes(x = prop, y = level)) +
 
 ### Merging rare factor levels (if they occure in less than 3%)  -------------------------------------------------------
 
-preprocessed_data <- preprocessed_data %>%
+cleaned_data <- preprocessed_data %>%
   mutate_at(cat_vars, fct_lump_prop, prop = 0.03) %>% 
   mutate(Age = fct_collapse(preprocessed_data$Age, '55+' = c('55-64', '65 +')))
 
 
 ### Fraction of Target's categories in categorical variables -----------------------------------------------------------
 
-categ_fractions <- preprocessed_data %>%
+categ_fractions <- cleaned_data%>%
   pivot_longer(cols = cat_vars,
                names_to = 'variable',
                values_to = 'level') %>% 
@@ -120,7 +120,7 @@ ggplot(categ_fractions, aes(x = fraction, y = level, fill = target)) +
 
 ### Exploration od Continuus Variables ###############################################################################
 
-numeric_vars <- preprocessed_data %>% 
+numeric_vars <- cleaned_data %>% 
   select_if(is.numeric) %>%
   colnames()
 
@@ -148,7 +148,7 @@ ggplot(numerical_longer, aes(score, fill = Benzos)) +
 
 # Correlations ---------------------------------------------------------------------------------------------------------
 
-corr_matrix <- cor(preprocessed_data[ , numeric_vars])
+corr_matrix <- cor(cleaned_data[ , numeric_vars])
 
 corrplot(corr_matrix,
          type = 'lower',
@@ -157,18 +157,8 @@ corrplot(corr_matrix,
          addCoef.col = 'black',
          tl.srt = 45)
 
+save(cleaned_data, file = 'data/200_cleaned_data.RData')
+
+rm(list = ls())
 
 
-
-
-
-
-
-
-
-
-
-  
-  
-
-  
