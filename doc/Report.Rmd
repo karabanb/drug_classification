@@ -1,0 +1,65 @@
+---
+title: "Classification of Drug Usage"
+author: "Bartlomiej Karban"
+date: "3/22/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The aim of the project is to build a predictive model for classifying people into one of two possible classes: "user" and "non user".
+
+The project uses the CRISP_DM methodology. The final result was achieved in the following steps:
+
+1. understanding the problem.
+2. exploratory data analysis and selection of the target variable.
+3. selection and evaluation of models.
+4. quality assessment. 
+5. recommendation.
+
+```{r include=FALSE}
+library(tidyverse)
+library(funModeling)
+```
+
+
+```{r data at glance, echo=FALSE}
+load('/Users/bkaraban/RProjects/drug_classification/data/100_raw_data.RData')
+load('/Users/bkaraban/RProjects/drug_classification/data/100_preprocessed_data.RData')
+
+df_raw <- df_status(raw_data, print_results = FALSE)
+
+knitr::kable(df_raw)
+```
+
+# Plots
+
+```{r}
+
+```
+
+![](/Users/bkaraban/RProjects/drug_classification/results/200_TargetsBalance.png){#id .class width=600px height=600px}
+
+![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfDiscretFeatures.png){#id .class width=600px height=600px}
+
+
+
+
+
+![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfTargetInDiscretVariables.png){#id .class width=600px height=600px}
+
+
+
+
+![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfContinuousVariables.png){#id .class width=600px height=600px}
+
+
+
+
+![](/Users/bkaraban/RProjects/drug_classification/results/Rplot_tmp.png){#id .class width=600px height=600px}
+
+![](/Users/bkaraban/RProjects/drug_classification/results/200_Correlations.png){#id .class width=600px height=600px}
+
+

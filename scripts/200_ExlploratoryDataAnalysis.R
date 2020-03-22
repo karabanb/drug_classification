@@ -34,7 +34,8 @@ ggplot(usage_freq, aes(x = drug, y = prop, fill = value)) +
   geom_bar(stat = 'identity', position = 'fill', alpha = 0.7)+
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90),
-        legend.title = element_blank()) + 
+        legend.title = element_blank(),
+        legend.position = 'bottom') + 
   geom_text(aes(label = round(prop, 2)),
             position = position_stack(vjust = 0.5),
             color="black",
@@ -42,7 +43,8 @@ ggplot(usage_freq, aes(x = drug, y = prop, fill = value)) +
   xlab('Drug') +
   ylab('Fraction') +
   coord_flip() +
-  ggtitle('Fraction of Users/Non-users in Each Category of Drug') 
+  ggtitle('Share of Users/Non-users in Each Category of Drug') +
+  ggsave('results/200_TargetsBalance.png')
 
 # As we can see on this chart the most balanced targed variable is 'Benzos', so I decided to choose this one 
 # as target variable to modeling.
@@ -72,7 +74,9 @@ ggplot(categ_fractions, aes(x = prop, y = level)) +
             color = "black",
             nudge_x = 0.2,
             size = 3) +
-  theme_bw()
+  theme_bw() +
+  ggtitle('Distribution of Discrete Variables') +
+  ggsave('results/200_DistributionOfDiscretVariables.png')
 
 
 ### Merging rare factor levels (if they occure in less than 3%)  -------------------------------------------------------
@@ -101,8 +105,7 @@ categ_fractions <- cleaned_data%>%
 categ_fractions$level <- fct_reorder2(categ_fractions$level,
                                       categ_fractions$target,
                                       categ_fractions$fraction,
-                                      .fun = min
-)
+                                      .fun = min)
 
 
 ggplot(categ_fractions, aes(x = fraction, y = level, fill = target)) +
@@ -115,7 +118,8 @@ ggplot(categ_fractions, aes(x = fraction, y = level, fill = target)) +
             color = "black",
             position = position_stack(vjust = 0.5),
             size = 3) +
-  ggtitle('Distribution of Target in each Category of each Variable')
+  ggtitle('Distribution of Target in Discrete Variables') +
+  ggsave('results/200_DistributionOfTargetInDiscretVariables.png')
   
 
 ### Exploration od Continuus Variables ###############################################################################
@@ -133,7 +137,9 @@ numerical_longer <- preprocessed_data %>%
 ggplot(numerical_longer, aes(score)) +
   facet_wrap(.~variable) +
   geom_density() +
-  theme_bw()
+  theme_bw() +
+  ggtitle('Distribution of Continuous Variables') +
+  ggsave('results/200_DistributionOfContinuousVariables.png')
 
 
 ggplot(numerical_longer, aes(score, fill = Benzos)) +
@@ -142,20 +148,22 @@ ggplot(numerical_longer, aes(score, fill = Benzos)) +
   theme_bw() +
   theme(legend.title = element_blank(),
         legend.position = 'bottom',
-        axis.text.y = element_blank()) +
-  ggtitle('Boxplots of  ')
+        axis.text.y = element_blank()) 
+  # ggtitle('Boxplots of  ')
 
 
 # Correlations ---------------------------------------------------------------------------------------------------------
 
 corr_matrix <- cor(cleaned_data[ , numeric_vars])
 
+png(filename = 'results/200_Correlations.png', width = 600, height = 600)
 corrplot(corr_matrix,
          type = 'lower',
          method = 'color', 
          number.cex = 0.8,
          addCoef.col = 'black',
          tl.srt = 45)
+dev.off()
 
 save(cleaned_data, file = 'data/200_cleaned_data.RData')
 
