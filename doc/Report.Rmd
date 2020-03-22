@@ -9,57 +9,173 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The aim of the project is to build a predictive model for classifying people into one of two possible classes: "user" and "non user".
+<br>
 
-The project uses the CRISP_DM methodology. The final result was achieved in the following steps:
+The aim of the project is to build a predictive model for the binary classification problem. The data concerns the problem of the frequency of drug use. Each observation (human) is described by a set of demographic and psychological attributes.  A possible target variable is an assignment to a class: 'user' or ‚non-user' of one of the selected psychoactive substances.
 
-1. understanding the problem.
-2. exploratory data analysis and selection of the target variable.
-3. selection and evaluation of models.
-4. quality assessment. 
-5. recommendation.
+
+The data set is shared [here](https://archive.ics.uci.edu/ml/datasets/Drug+consumption+%28quantified%29#)
+
+<br>
+
+The project uses the "CRISP-DM" methodology. The final result was achieved in the following steps:
+
+1. Understanding the problem.
+2. Exploratory Data Analysis and selection of the target variable.
+3. Modeling.
+4. Performance Assessment. 
+5. Recommendation.
+
+## 1. Understanding the problem.
+<br>
+The provided data contains both demographic (e.g., age, gender) and psychological characteristics. Observing raw data, one can see that some of the characteristics recorded as numerical are, in fact, not - they are most likely factors whose levels have been normalized.
+
+The problem concerns features from V2 to V6. Features V7 to V13 are the result of psychological measurement and are encoded correctly. 
+
+The other features (V14 to V32 )indicate drugs; each of them is described by categories indicating the time since last use. To reduce the task to binary classification, they coded into two new ones: "user," "non-user."
+
+The structure of the described data is presented below.
 
 ```{r include=FALSE}
 library(tidyverse)
 library(funModeling)
+library(caret)
 ```
 
 
-```{r data at glance, echo=FALSE}
+```{r data at glance, include=FALSE}
 load('/Users/bkaraban/RProjects/drug_classification/data/100_raw_data.RData')
 load('/Users/bkaraban/RProjects/drug_classification/data/100_preprocessed_data.RData')
 
-df_raw <- df_status(raw_data, print_results = FALSE)
-
-knitr::kable(df_raw)
+# df_raw <- df_status(raw_data, print_results = FALSE)
+# 
+# knitr::kable(df_raw)
+```
+<br>
+```{r echo=FALSE}
+raw_data  %>% glimpse()
 ```
 
-# Plots
+After re-coding and renaming of the features, the data frame looks as follows:
 
-```{r}
+<br>
 
+```{r echo=FALSE}
+preprocessed_data %>% glimpse()
 ```
+<br>
+
+The next step is Exploratory Data Analysis and selecting a Target variable for modeling.
+
+## 2. Exploratory Data Analysis. Selecting target variable. 
+
+<br>
+<br>
+
+First, the distribution of success ("user") in all variables that can be the target variable in the classification model was checked. As you can see, the variables have a different degree of success balance. **Based on this analysis, "Benzos" was chosen as the target variable - one of the reasons is a good balance of this variable.  Another reason is that benzodiazepines are not an illegal drug, but a prescription medicine and this fact may be of interest to a pharmaceutical company.**
 
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_TargetsBalance.png){#id .class width=600px height=600px}
 
+<br>
+
+In the next step, the distribution of categorical variables was checked to find rare categories. All categories with less than 3% were merged into one 'other' category.
+
+
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfDiscretFeatures.png){#id .class width=600px height=600px}
 
+<br>
 
-
-
+Once the rare categories were merged, the distribution of success in each of the category variables was checked. As shown in the figure below, there is a noticeable relationship between the target variable and age, gender or education.
 
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfTargetInDiscretVariables.png){#id .class width=600px height=600px}
 
+<br>
 
+The next step is to analyse the continuous variables. As you can see, all of the continuous variables have a close to normal distribution.
 
 
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfContinuousVariables.png){#id .class width=600px height=600px}
 
+<br>
 
+Additionally, it has been checked how the distributions of continuous variables differ in terms of success. Such visual exploration may indicate strong predicators. At this stage of the analysis, none of these variables seem to be particularly interesting.
 
 
 ![](/Users/bkaraban/RProjects/drug_classification/results/Rplot_tmp.png){#id .class width=600px height=600px}
-
+<br><br>
+The last stage of exploratory analysis is to check the correlation. In the correlation matrix, there are no variables that are strongly correlated with each other. Additionally, the logistic regression model is checked for collinearity using the Variance Inflation Factor. If any of the variables enter collinearity, it's removed.
+<br>
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_Correlations.png){#id .class width=600px height=600px}
+<br><br>
+
+## 3. Modeling
+<br>
+In this phase 3 classification models are proposed:
+
+- Logistic Regression model,
+- Decision Tree,
+- Random Forest.
+
+<br>
+
+
+The data was divided into two parts: training-validation (70%) and testing (30%). With the use of the training-validation set, models were built (including the search for the best hyperparameters - using repetitive cross-validation), and performance was checked on the test one. Of course, the performance was compared between the training-validation set and the test set in order to check if the models are overfitted.
+
+<br>
+
+For Logistic Regression and Decision Tree, the model form was presented. The quality of each model was shown using a confusion matrix calculated on the test set. Comparison of the models with each other, and the results for the training-validation sets are presented further.
+
+<br>
+
+### Logistic Regression.
+
+<br>
+```{r m3_glm, echo=FALSE}
+load('/Users/bkaraban/RProjects/drug_classification/results/300_m3_glm.RData')
+load('/Users/bkaraban/RProjects/drug_classification/tmp/300_glm_performace.RData')
+
+summary(m3_glm)
+```
+<br>
+
+```{r echo=FALSE}
+cm_m3_glm
+```
+
+### Decision Tree
+
+![](/Users/bkaraban/RProjects/drug_classification/results/301_DecisionTree.png){#id .class width=600px height=600px}
+<br>
+```{r m4_rpart, echo=FALSE}
+
+load('/Users/bkaraban/RProjects/drug_classification/tmp/301_rpart_performace.RData')
+
+cm_m4_rpart
+```
+
+<br>
+
+### Random Forest
+```{r m6_rf, echo=FALSE}
+
+load('/Users/bkaraban/RProjects/drug_classification/tmp/302_rf_performace.RData')
+
+print(cm_m6_rf)
+```
+
+<br>
+
+## Performance Assesment.
+
+
+```{r performacnce, echo=FALSE}
+load('/Users/bkaraban/RProjects/drug_classification/results/400_performance_metrics.RData')
+
+knitr::kable(results_df, digits = 3)
+```
+
+![](/Users/bkaraban/RProjects/drug_classification/results/400_ROCcurves.png){#id .class width=600px height=600px}
+
+
 
 
