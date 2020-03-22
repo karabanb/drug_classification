@@ -18,7 +18,7 @@ load('tmp/200_DrugNames.RData')
 
 glm_data <- cleaned_data %>%
   select(-setdiff(drugs, 'Benzos')) %>% 
-  mutate(BenzosInt = if_else(Benzos == 'user', 1, 0)) %>%   # some libries for maesuring model perforamce requires numerics
+  mutate(BenzosInt = if_else(Benzos == 'user', 1, 0)) %>%   # some libs for maesuring AUC requires Target as numeric
   createDummyFeatures(obj = ., target = 'Benzos')
 
 set.seed(42)
