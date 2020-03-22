@@ -49,6 +49,8 @@ summary(m2_glm)
 m3_glm <- step(m2_glm, direction = 'both')
 summary(m3_glm)
 
+save(m3_glm, file = 'results/300_m3_glm.RData')
+
 
 ### PREDICTION #########################################################################################################
 
@@ -62,9 +64,4 @@ AUC(pred_m3$probs[ix_trn], glm_data[ix_trn, 'BenzosInt'])
 AUC(pred_m3$probs[-ix_trn], glm_data[-ix_trn, 'BenzosInt'])
 
 confusionMatrix(pred_m2$category[-ix_trn], glm_data[-ix_trn, 'Benzos'], positive = 'user')
-
-
-
-
-
 
