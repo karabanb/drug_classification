@@ -62,10 +62,10 @@ pred_m3 <- data.frame(probs = predict(m3_glm, newdata = glm_data, type = 'respon
 
 ### PERFORMANCE ########################################################################################################
 
-AUC(pred_m3$probs[ix_trn], glm_data[ix_trn, 'BenzosInt'])
-AUC(pred_m3$probs[-ix_trn], glm_data[-ix_trn, 'BenzosInt'])
+auc_glm_trn <- AUC(pred_m3$probs[ix_trn], glm_data[ix_trn, 'BenzosInt'])
+auc_glm_tst <- AUC(pred_m3$probs[-ix_trn], glm_data[-ix_trn, 'BenzosInt'])
 
-confusionMatrix(pred_m3$category[-ix_trn], glm_data[-ix_trn, 'Benzos'], positive = 'user')
+cm_m3_glm <- confusionMatrix(pred_m3$category[-ix_trn], glm_data[-ix_trn, 'Benzos'], positive = 'user')
 
 
 ### Performing Cross Validation for checking standard deviation of predicted AUC ---------------------------------------
@@ -108,6 +108,15 @@ resample_glm <- resample(learner = learner_glm,
                          measures = list(auc_trn, auc, auc_sd))
 
 resample_glm
+
+perf_glm <- data.frame(model = 'glm',
+                       auc_train = auc_glm_trn,
+                       auc_test = auc_glm_tst,
+                       auc_test_sd = sd(resample_glm$measures.test$auc),
+                       precision_test = cm_m3_glm$byClass['Precision'],
+                       recall_test = cm_m3_glm$byClass['Recall'])
+
+save(perf_glm, cm_m3_glm, file = 'tmp/300_glm_performace.RData')
 
 rm(list = ls())
 

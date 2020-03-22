@@ -9,17 +9,13 @@ library(rpart.plot)
 library(ranger)
 library(MLmetrics)
 
+
 ### PREPARING DATASET ##################################################################################################
 
 load('data/200_cleaned_data.RData')
 load('tmp/200_DrugNames.RData')
 load('tmp/300_train_index.RData')
 load('data/301_trees_data.RData')
-
-# trees_data <- cleaned_data %>% 
-  # select(-setdiff(drugs, 'Benzos')) %>% 
-  # mutate(BenzosInt = if_else(Benzos == 'user', 1, 0))
-
 
 
 ### MODELING DECISION RANFOM FOREST ####################################################################################
@@ -91,11 +87,21 @@ pred_m6 <- data.frame(probs = pred_m6_prob,
                       category = ifelse(pred_m6_prob > 0.5, 'user', 'non_user'))
 
 
-AUC(pred_m6$probs[ix_trn], trees_data[ix_trn, 'BenzosInt'])
-AUC(pred_m6$probs[-ix_trn], trees_data[-ix_trn, 'BenzosInt'])
+auc_rf_trn <- AUC(pred_m6$probs[ix_trn], trees_data[ix_trn, 'BenzosInt'])
+auc_rf_tst <- AUC(pred_m6$probs[-ix_trn], trees_data[-ix_trn, 'BenzosInt'])
 
-confusionMatrix(pred_m6$category[-ix_trn], trees_data[-ix_trn, 'Benzos'], positive = 'user')
+cm_m6_rf <- confusionMatrix(pred_m6$category[-ix_trn], trees_data[-ix_trn, 'Benzos'], positive = 'user')
 
+
+perf_rf <- data.frame(model = 'random forest',
+                      auc_train = auc_rf_trn,
+                      auc_test = auc_rf_tst,
+                      auc_test_sd = df_rf_tune_results[2, 'auc.test.sd'],
+                      precision_test = cm_m6_rf$byClass['Precision'],
+                      recall_test = cm_m6_rf$byClass['Recall'])
+
+save(cm_m6_rf, perf_rf, file = 'tmp/302_rf_performace.RData')
 rm(list = ls())
+
 
 

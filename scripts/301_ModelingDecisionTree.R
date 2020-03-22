@@ -83,10 +83,19 @@ save(m4_rpart, file = 'results/301_m4_rpart.RData')
 pred_m4 <- data.frame(probs = predict(m4_rpart, newdata = trees_data, type = 'prob'),
                       category = predict(m4_rpart, newdata = trees_data,type = 'class'))
 
-AUC(pred_m4$probs.user[ix_trn], trees_data[ix_trn, 'BenzosInt'])
-AUC(pred_m4$probs.user[-ix_trn], trees_data[-ix_trn, 'BenzosInt'])
+auc_rpart_trn <- AUC(pred_m4$probs.user[ix_trn], trees_data[ix_trn, 'BenzosInt'])
+auc_rpart_tst <- AUC(pred_m4$probs.user[-ix_trn], trees_data[-ix_trn, 'BenzosInt'])
 
-confusionMatrix(pred_m4$category[-ix_trn], trees_data[-ix_trn, 'Benzos'], positive = 'user')
+cm_m4_rpart <- confusionMatrix(pred_m4$category[-ix_trn], trees_data[-ix_trn, 'Benzos'], positive = 'user')
+
+perf_rpart <- data.frame(model = 'decision tree',
+                       auc_train = auc_rpart_trn,
+                       auc_test = auc_rpart_tst,
+                       auc_test_sd = data.frame(tune_results$opt.path)['auc.test.sd'][[1]][1],
+                       precision_test = cm_m4_rpart$byClass['Precision'],
+                       recall_test = cm_m4_rpart$byClass['Recall'])
+
+save(perf_rpart, cm_m4_rpart, file = 'tmp/301_rpart_performace.RData')
 
 rm(list = ls())
 
