@@ -23,8 +23,8 @@ glm_data <- cleaned_data %>%
 
 set.seed(42)
 ix_trn <- createDataPartition(glm_data$Benzos, p = 0.7, list = FALSE)
-
 save(ix_trn, file = 'tmp/300_train_index.RData')
+
 
 ### MODELING ###########################################################################################################
 
