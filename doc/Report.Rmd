@@ -2,8 +2,11 @@
 title: "Classification of Drug Usage"
 author: "Bartlomiej Karban"
 date: "3/22/2020"
-output: html_document
+output: 
+  html_document:
+    toc: true
 ---
+<br>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -26,6 +29,9 @@ The project uses the "CRISP-DM" methodology. The final result was achieved in th
 4. Performance Assessment. 
 5. Recommendation.
 
+<br>
+<br>
+
 ## 1. Understanding the problem.
 <br>
 The provided data contains both demographic (e.g., age, gender) and psychological characteristics. Observing raw data, one can see that some of the characteristics recorded as numerical are, in fact, not - they are most likely factors whose levels have been normalized.
@@ -35,6 +41,7 @@ The problem concerns features from V2 to V6. Features V7 to V13 are the result o
 The other features (V14 to V32 )indicate drugs; each of them is described by categories indicating the time since last use. To reduce the task to binary classification, they coded into two new ones: "user," "non-user."
 
 The structure of the described data is presented below.
+<br>
 
 ```{r include=FALSE}
 library(tidyverse)
@@ -67,34 +74,34 @@ preprocessed_data %>% glimpse()
 
 The next step is Exploratory Data Analysis and selecting a Target variable for modeling.
 
+<br>
+<br>
+
 ## 2. Exploratory Data Analysis. Selecting target variable. 
 
-<br>
 <br>
 
 First, the distribution of success ("user") in all variables that can be the target variable in the classification model was checked. As you can see, the variables have a different degree of success balance. **Based on this analysis, "Benzos" was chosen as the target variable - one of the reasons is a good balance of this variable.  Another reason is that benzodiazepines are not an illegal drug, but a prescription medicine and this fact may be of interest to a pharmaceutical company.**
 
+<br>
+
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_TargetsBalance.png){#id .class width=600px height=600px}
 
 <br>
-<<<<<<< HEAD
 
-In the next step, the distribution of categorical variables was checked to find rare categories. All categories with less than 3% were merged into one 'other' category.
-=======
->>>>>>> b0c703a6146efa0bf1b468066522b38551f40a8e
 
 In the next step, the distribution of categorical variables was checked to find rare categories. All categories with less than 3% were merged into one 'other' category.
 
+<br>
+
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfDiscretFeatures.png){#id .class width=600px height=600px}
 
-<<<<<<< HEAD
-=======
-![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfDiscretFeatures.png){#id .class width=600px height=600px}
 
->>>>>>> b0c703a6146efa0bf1b468066522b38551f40a8e
 <br>
 
 Once the rare categories were merged, the distribution of success in each of the category variables was checked. As shown in the figure below, there is a noticeable relationship between the target variable and age, gender or education.
+
+<br>
 
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfTargetInDiscretVariables.png){#id .class width=600px height=600px}
 
@@ -102,6 +109,7 @@ Once the rare categories were merged, the distribution of success in each of the
 
 The next step is to analyse the continuous variables. As you can see, all of the continuous variables have a close to normal distribution.
 
+<br>
 
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfContinuousVariables.png){#id .class width=600px height=600px}
 
@@ -109,6 +117,7 @@ The next step is to analyse the continuous variables. As you can see, all of the
 
 Additionally, it has been checked how the distributions of continuous variables differ in terms of success. Such visual exploration may indicate strong predicators. At this stage of the analysis, none of these variables seem to be particularly interesting.
 
+<br>
 
 ![](/Users/bkaraban/RProjects/drug_classification/results/Rplot_tmp.png){#id .class width=600px height=600px}
 <br><br>
@@ -151,8 +160,10 @@ summary(m3_glm)
 cm_m3_glm
 ```
 
-### Decision Tree
+<br>
 
+### Decision Tree.
+<br>
 ![](/Users/bkaraban/RProjects/drug_classification/results/301_DecisionTree.png){#id .class width=600px height=600px}
 <br>
 ```{r m4_rpart, echo=FALSE}
@@ -164,7 +175,8 @@ cm_m4_rpart
 
 <br>
 
-### Random Forest
+### Random Forest.
+<br>
 ```{r m6_rf, echo=FALSE}
 
 load('/Users/bkaraban/RProjects/drug_classification/tmp/302_rf_performace.RData')
@@ -173,10 +185,11 @@ print(cm_m6_rf)
 ```
 
 <br>
+<br>
 
-## Performance Assesment.
 
-<<<<<<< HEAD
+## 4. Performance Assesment.
+
 <br>
 
 As indicated earlier, the models were compared with each other. The conclusions are as follows:
@@ -188,17 +201,29 @@ As indicated earlier, the models were compared with each other. The conclusions 
 The results are summarized in the table below. 
 <br>
 
-=======
->>>>>>> b0c703a6146efa0bf1b468066522b38551f40a8e
 
 ```{r performacnce, echo=FALSE}
 load('/Users/bkaraban/RProjects/drug_classification/results/400_performance_metrics.RData')
 
 knitr::kable(results_df, digits = 3)
 ```
+<br>
 
+The figure below shows the ROC curves calculated on the test set for each model.
+
+<br>
 ![](/Users/bkaraban/RProjects/drug_classification/results/400_ROCcurves.png){#id .class width=600px height=600px}
 
+<br>
+<br>
 
+## 5. Recommendation.
+<br>
+For implementation, I recommend the logistic regression model. It has relatively good results and is easy to interpret.
+
+**The model formula and classification quality should be discussed with field experts.** It should be emphasized that by changing the cut-off for the probability of classification to one of two classes, we can have an impact on the results of the measurements from the confusion matrix.
+
+<br>
+<br>
 
 
