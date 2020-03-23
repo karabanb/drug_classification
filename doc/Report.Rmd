@@ -124,7 +124,15 @@ Additionally, it has been checked how the distributions of continuous variables 
 The last stage of exploratory analysis is to check the correlation. In the correlation matrix, there are no variables that are strongly correlated with each other. Additionally, the logistic regression model is checked for collinearity using the Variance Inflation Factor. If any of the variables enter collinearity, it's removed.
 <br>
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_Correlations.png){#id .class width=600px height=600px}
-<br><br>
+<br>
+
+**The existence of NA's was also checked. The data is complete.**
+```{r}
+anyNA(preprocessed_data)
+```
+
+<br>
+<br>
 
 ## 3. Modeling
 <br>
