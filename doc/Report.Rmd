@@ -77,12 +77,21 @@ First, the distribution of success ("user") in all variables that can be the tar
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_TargetsBalance.png){#id .class width=600px height=600px}
 
 <br>
+<<<<<<< HEAD
+
+In the next step, the distribution of categorical variables was checked to find rare categories. All categories with less than 3% were merged into one 'other' category.
+=======
+>>>>>>> b0c703a6146efa0bf1b468066522b38551f40a8e
 
 In the next step, the distribution of categorical variables was checked to find rare categories. All categories with less than 3% were merged into one 'other' category.
 
-
 ![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfDiscretFeatures.png){#id .class width=600px height=600px}
 
+<<<<<<< HEAD
+=======
+![](/Users/bkaraban/RProjects/drug_classification/results/200_DistributionOfDiscretFeatures.png){#id .class width=600px height=600px}
+
+>>>>>>> b0c703a6146efa0bf1b468066522b38551f40a8e
 <br>
 
 Once the rare categories were merged, the distribution of success in each of the category variables was checked. As shown in the figure below, there is a noticeable relationship between the target variable and age, gender or education.
@@ -167,6 +176,7 @@ print(cm_m6_rf)
 
 ## Performance Assesment.
 
+<<<<<<< HEAD
 <br>
 
 As indicated earlier, the models were compared with each other. The conclusions are as follows:
@@ -178,6 +188,8 @@ As indicated earlier, the models were compared with each other. The conclusions 
 The results are summarized in the table below. 
 <br>
 
+=======
+>>>>>>> b0c703a6146efa0bf1b468066522b38551f40a8e
 
 ```{r performacnce, echo=FALSE}
 load('/Users/bkaraban/RProjects/drug_classification/results/400_performance_metrics.RData')
